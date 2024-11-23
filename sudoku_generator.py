@@ -1,4 +1,4 @@
-import math,random
+import math,random, time
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -23,7 +23,14 @@ class SudokuGenerator:
 	None
     '''
     def __init__(self, row_length, removed_cells):
-        pass
+        self.row_length = row_length
+        self.removed_cells = removed_cells
+        self.board = [[],[],[]
+                      ,[],[],[]
+                      ,[],[],[]]
+        self.box_length = row_length**.5
+    
+
 
     '''
 	Returns a 2D python list of numbers which represents the board
@@ -32,7 +39,7 @@ class SudokuGenerator:
 	Return: list[list]
     '''
     def get_board(self):
-        return "a"
+        return self.board
 
     '''
 	Displays the board to the console
@@ -119,7 +126,11 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_diagonal(self):
-        pass
+        for count in range(len(self.board)):
+            if count in (0,4,8):
+                self.board[count]= ([1,2,3,4,5,6,7,8,9])
+                random.shuffle(self.board[count])
+
 
     '''
     DO NOT CHANGE
