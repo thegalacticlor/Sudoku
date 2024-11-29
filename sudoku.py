@@ -1,4 +1,5 @@
 import pygame, sys
+from sudoku_generator import *
 
 def game_won_screen():
     window.fill(WHITE)
@@ -56,7 +57,6 @@ def game_lost_screen():
                 mouse_x, mouse_y = event.pos
                 if restart_button.collidepoint(mouse_x, mouse_y):
                     return True
-    return False
 
 def game_start_screen():
     window.fill(WHITE)
@@ -90,8 +90,8 @@ def game_start_screen():
 
     pygame.display.update()
 
-    noInput = True
-    while noInput:
+    waiting_for_click = True
+    while waiting_for_click:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -105,16 +105,69 @@ def game_start_screen():
                 elif hard_button.collidepoint(mouse_x, mouse_y):
                     return 50
 
-#main game load test
-def main():
-    pygame.init()
+def game_ip_screen(level):
+    #sudoku board
+    window.fill(WHITE)
+    window.blit(background_image, (0, 0))
+    grid_bg = pygame.Rect(50, 0, 500, 500)
+    pygame.draw.rect(window, WHITE, grid_bg)
+    for i in range(10):
+        pygame.draw.line(window, BLACK, (i * (500/9) + 50, 0), (i * (500/9) + 50, 500))
+        pygame.draw.line(window, BLACK, (50, i * (500/9)), (550, i * (500/9)))
 
+    #reset button
+    reset_button = pygame.Rect(25, 525, 150, 50)
+    pygame.draw.rect(window, DARKGREEN, reset_button)
+    reset_text = small_font.render("Reset", True, WHITE)
+    window.blit(reset_text, (55 + reset_text.get_width() // 2, 525 + reset_text.get_height() // 2))
+
+    #restart button
+    restart_button = pygame.Rect((WIDTH - 150) // 2, 525, 150, 50)
+    pygame.draw.rect(window, DARKGREEN, restart_button)
+    restart_text = small_font.render("Restart", True, WHITE)
+    window.blit(restart_text, ((WIDTH - restart_text.get_width()) // 2, 525 + restart_text.get_height() // 2))
+
+    #exit button
+    exit_button = pygame.Rect(WIDTH - 175, 525, 150, 50)
+    pygame.draw.rect(window, DARKGREEN, exit_button)
+    exit_text = small_font.render("Exit", True, WHITE)
+    window.blit(exit_text, (WIDTH - 140 + (exit_text.get_width()), 525 + exit_text.get_height() // 2))
+
+    #stuff based off of what level they chose
+    if level == 1:
+        print(30)
+    elif level == 2:
+        print(40)
+    elif level == 3:
+        print(50)
+    pygame.display.update()
+    waiting_for_click = True
+    while waiting_for_click:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = event.pos
+                if exit_button.collidepoint(mouse_x, mouse_y):
+                    pygame.quit()
+                    quit()
+                elif restart_button.collidepoint(mouse_x, mouse_y):
+                    # need to add proper reset code
+                    print("fix this")
+                elif reset_button.collidepoint(mouse_x, mouse_y):
+                    # need to add proper reset code
+                    print("fix this")
+
+#main game load test
+if __name__ == '__main__':
+    pygame.init()
     WIDTH, HEIGHT = 600, 600
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Holiday Sudoku")
 
     # Load the custom background image
-    background_image = pygame.image.load("christmasBackground.jpg")
+    background_image = pygame.image.load("christmas.png")
     background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))  # Resize to fit the window
 
     # Define colors
@@ -130,23 +183,17 @@ def main():
     fancy_font = pygame.font.SysFont("gabriola", 60)
     small_fancy_font = pygame.font.SysFont("gabriola", 45)
 
+    level = game_start_screen()
     while True:
-        level = game_start_screen()
         if level == 30:
-            # do something cause 30
-            print("30")
+            game_ip_screen(30)
         elif level == 40:
-            # do something cause 40
-            print("40")
+            game_ip_screen(40)
         elif level == 50:
-            # do something cause 50
-            print("50")
+            game_ip_screen(50)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
         pygame.display.update()
-
-if __name__ == '__main__':
-    main()
