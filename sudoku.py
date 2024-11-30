@@ -167,7 +167,7 @@ if __name__ == '__main__':
     pygame.display.set_caption("Holiday Sudoku")
 
     # Load the custom background image
-    background_image = pygame.image.load("christmas.png")
+    background_image = pygame.image.load("christmasBackground.jpg")
     background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))  # Resize to fit the window
 
     # Define colors
