@@ -1,4 +1,4 @@
-import math, random, time
+import math,random, time
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -29,7 +29,7 @@ class SudokuGenerator:
                       ,[],[],[]
                       ,[],[],[]]
         self.box_length = row_length**.5
-
+    
 
 
     '''
@@ -91,7 +91,7 @@ class SudokuGenerator:
     '''
     def valid_in_box(self, row_start, col_start, num):
         pass
-
+    
     '''
     Determines if it is valid to enter num at (row, col) in the board
     This is done by checking that num is unused in the appropriate, row, column, and box
@@ -117,7 +117,7 @@ class SudokuGenerator:
     '''
     def fill_box(self, row_start, col_start):
         pass
-
+    
     '''
     Fills the three boxes along the main diagonal of the board
     These are the boxes which start at (0,0), (3,3), and (6,6)
@@ -162,7 +162,7 @@ class SudokuGenerator:
                 col = 0
                 if row >= self.row_length:
                     return True
-
+        
         for num in range(1, self.row_length + 1):
             if self.is_valid(row, col, num):
                 self.board[row][col] = num
