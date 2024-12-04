@@ -41,9 +41,7 @@ def game_lost_screen():
     restart_button = pygame.Rect((WIDTH - 200) // 2, HEIGHT // 2, 200, 50)
     pygame.draw.rect(window, RED, restart_button)
     restart_text = small_font.render("Restart", True, WHITE)
-    restart_text_width = restart_text.get_width()
-    restart_text_height = restart_text.get_height()
-    window.blit(restart_text, ((WIDTH - restart_text_width) // 2, (HEIGHT // 2) + (50 - restart_text_height) // 2))
+    window.blit(restart_text, ((WIDTH - restart_text.get_width()) // 2, 525 + restart_text.get_height() // 2))
 
     pygame.display.update()
 
@@ -292,7 +290,44 @@ def game_ip_screen(level):
                         boardTempBig[activeBox[0]][activeBox[1]] = boardTemp[activeBox[0]][activeBox[1]]
                         boardTemp[activeBox[0]][activeBox[1]] = ""
                         redrawBoard(board, boardTemp, boardTempBig)
+                        check_game_status(boardTempBig)
+
             pygame.display.update()
+
+def is_valid_solution(board):
+    def check_group(group):
+        return sorted(group) == list(range(1, 10))
+
+    for row in board:
+        if not check_group(row):
+            return False
+
+    for col in zip(*board):
+        if not check_group(col):
+            return False
+
+    for box_row in range(0, 9, 3):
+        for box_col in range(0, 9, 3):
+            subgrid = [
+                board[row][col]
+                for row in range(box_row, box_row + 3)
+                for col in range(box_col, box_col + 3)
+            ]
+            if not check_group(subgrid):
+                return False
+
+    return True
+
+def check_game_status(board):
+    full_board = [[int(cell) if cell != "" else 0 for cell in row] for row in board]
+
+    if all(all(row) for row in full_board):
+        if is_valid_solution(full_board):
+            game_won_screen()
+        else:
+            game_lost_screen()
+
+
 
 
 #main game load test
