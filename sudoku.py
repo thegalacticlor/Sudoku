@@ -294,6 +294,7 @@ def game_ip_screen(level):
 
             pygame.display.update()
 
+#Check if filled board is correct
 def is_valid_solution(board):
     def check_group(group):
         return sorted(group) == list(range(1, 10))
@@ -318,6 +319,7 @@ def is_valid_solution(board):
 
     return True
 
+#Check if the board is full
 def check_game_status(board):
     full_board = [[int(cell) if cell != "" else 0 for cell in row] for row in board]
 
@@ -326,9 +328,6 @@ def check_game_status(board):
             game_won_screen()
         else:
             game_lost_screen()
-
-
-
 
 #main game load test
 if __name__ == '__main__':
