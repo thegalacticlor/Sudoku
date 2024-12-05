@@ -38,9 +38,6 @@ class SudokuGenerator:
     def propup(self):
         self.board = [self.board[i:i + 9] for i in range(0,len(self.board),9)]
 
-    def propup(self):
-        self.board = [self.board[i:i + 9] for i in range(0, len(self.board), 9)]
-
     '''
 	Returns a 2D python list of numbers which represents the board
 
@@ -74,7 +71,7 @@ class SudokuGenerator:
 
     def valid_in_row(self, row, num):
         self.flatten()
-        start = (row-1)*9
+        start= row * self.row_length
         check = self.board[start:start+9]
         if num in check:
             self.propup()
