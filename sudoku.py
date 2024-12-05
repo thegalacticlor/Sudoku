@@ -121,7 +121,7 @@ def redrawBoard(board, sketchBoard, enterBoard):
         numX = 60
         for j in range(9):
             place = sketchBoard[i][j]
-            num = small_font.render(place, True, BLACK)
+            num = small_font.render(place, True, GREEN)
             window.blit(num, (numX, numY))
             numX += (500 / 9)
         numY += (500 / 9)
@@ -130,7 +130,7 @@ def redrawBoard(board, sketchBoard, enterBoard):
         numX = 70
         for j in range(9):
             place = str(enterBoard[i][j])
-            num = font.render(place, True, BLACK)
+            num = font.render(place, True, RED)
             window.blit(num, (numX, numY))
             numX += (500 / 9)
         numY += (500 / 9)
@@ -253,7 +253,8 @@ def game_ip_screen(level):
                     boardTempBig = restart(board)
                     redrawBoard(board, boardTemp, boardTempBig)
                 for i in zeroSpots:
-                    if (round(i[0]) >= mouse_x - 40) and (round(i[0]) <= mouse_x + 40) and (round(i[1]) >= mouse_y - 40) and (round(i[1]) <= mouse_y + 40):
+                    if (round(i[0]) >= mouse_x - (500 / 18)) and (round(i[0]) <= mouse_x + (500 / 18)) and (round(i[1]) + (500 / 18) >= mouse_y - (500 / 18)) and (round(i[1]) + (500 / 18) <= mouse_y + (500 / 18)):
+                        print(i[0], i[1], mouse_x, mouse_y)
                         activeBox = [i[2], i[3]]
             if event.type == pygame.KEYDOWN:
                 if activeBox != []:
