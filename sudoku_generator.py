@@ -92,7 +92,7 @@ class SudokuGenerator:
 
     def valid_in_col(self, col, num):
         self.flatten()
-        start = (col-1)
+        start = col
         checklist = self.board[(start):(start+73):9]
         if num in checklist:
             self.propup()
@@ -114,41 +114,9 @@ class SudokuGenerator:
     '''
 
     def valid_in_box(self, row_start, col_start, num):
-        match(row_start,col_start):
-            case(1,1):
-                if num in self.board[0]:
-                    return False
-
-            case(1,4):
-                if num in self.board[1]:
-                    return False
-
-            case(1,7):
-                if num in self.board[2]:
-                    return False
-
-            case(4,1):
-                if num in self.board[3]:
-                    return False
-
-            case(4,4):
-                if num in self.board[4]:
-                    return False
-
-            case(4,7):
-                if num in self.board[5]:
-                    return False
-
-            case(7,1):
-                if num in self.board[6]:
-                    return False
-
-            case(7,4):
-                if num in self.board[7]:
-                    return False
-
-            case(7,7):
-                if num in self.board[8]:
+        for row in range(row_start, row_start + self.box_length):
+            for col in range(col_start, col_start + self.box_length):
+                if self.board[row][col] == num:
                     return False
         return True
 
@@ -189,9 +157,9 @@ class SudokuGenerator:
     def fill_box(self, row_start, col_start):
         nums = list(range(1, 10))
         random.shuffle(nums)
-        for i in range(3):
-            for j in range(3):
-                self.board[row_start + i][col_start + j] = nums.pop()
+        for row in range(3):
+            for col in range(3):
+                self.board[row_start + row][col_start + col] = nums.pop()
     
     '''
     Fills the three boxes along the main diagonal of the board
