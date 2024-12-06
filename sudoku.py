@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, copy
 from sudoku_generator import *
 
 def game_won_screen():
@@ -41,7 +41,9 @@ def game_lost_screen():
     restart_button = pygame.Rect((WIDTH - 200) // 2, HEIGHT // 2, 200, 50)
     pygame.draw.rect(window, RED, restart_button)
     restart_text = small_font.render("Restart", True, WHITE)
-    window.blit(restart_text, ((WIDTH - restart_text.get_width()) // 2, 525 + restart_text.get_height() // 2))
+    restart_text_width = restart_text.get_width()
+    restart_text_height = restart_text.get_height()
+    window.blit(restart_text, ((WIDTH - restart_text_width) // 2, (HEIGHT // 2) + (50 - restart_text_height) // 2))
 
     pygame.display.update()
 
@@ -54,7 +56,7 @@ def game_lost_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
                 if restart_button.collidepoint(mouse_x, mouse_y):
-                    return "restart"
+                    return True
 
 def game_start_screen():
     window.fill(WHITE)
@@ -135,7 +137,7 @@ def redrawBoard(board, sketchBoard, enterBoard):
             numX += (500 / 9)
         numY += (500 / 9)
 
-def restart(board):
+def restart():
     return [["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""],
             ["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""],
             ["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", ""]]
@@ -150,6 +152,16 @@ def ipDetails():
         else:
             pygame.draw.line(window, BLACK, (i * (500 / 9) + 50, 0), (i * (500 / 9) + 50, 500))
             pygame.draw.line(window, BLACK, (50, i * (500 / 9)), (550, i * (500 / 9)))
+
+def boardCombiner(board, boardTempBig):
+    end = restart()
+    for i in range(9):
+        for j in range(9):
+            if boardTempBig[i][j] == "":
+                end[i][j] = board[i][j]
+            else:
+                end[i][j] = boardTempBig[i][j]
+    return end
 
 def game_ip_screen(level):
     #sudoku board
@@ -179,9 +191,20 @@ def game_ip_screen(level):
 
     #stuff based off of what level they chose
     if level == 30:
-        board = generate_sudoku(9, 30)
-        boardTemp = restart(board)
-        boardTempBig = restart(board)
+        sudoku = SudokuGenerator(9, 30)
+        sudoku.fill_values()
+        board = sudoku.get_board()
+
+        boardFinished = copy.deepcopy(board)
+
+        sudoku.remove_cells()
+        board = sudoku.get_board()
+
+        boardTemp = restart()
+        boardTempBig = restart()
+
+        boardCombined = restart()
+
         zeroSpots = []
         numY = 5
         for i in range(9):
@@ -197,9 +220,20 @@ def game_ip_screen(level):
             numY += (500 / 9)
 
     elif level == 40:
-        board = generate_sudoku(9, 40)
-        boardTemp = restart(board)
-        boardTempBig = restart(board)
+        sudoku = SudokuGenerator(9, 40)
+        sudoku.fill_values()
+        board = sudoku.get_board()
+
+        boardFinished = copy.deepcopy(board)
+
+        sudoku.remove_cells()
+        board = sudoku.get_board()
+
+        boardTemp = restart()
+        boardTempBig = restart()
+
+        boardCombined = restart()
+
         zeroSpots = []
         numY = 5
         for i in range(9):
@@ -215,9 +249,20 @@ def game_ip_screen(level):
             numY += (500 / 9)
 
     elif level == 50:
-        board = generate_sudoku(9, 50)
-        boardTemp = restart(board)
-        boardTempBig = restart(board)
+        sudoku = SudokuGenerator(9, 50)
+        sudoku.fill_values()
+        board = sudoku.get_board()
+
+        boardFinished = copy.deepcopy(board)
+
+        sudoku.remove_cells()
+        board = sudoku.get_board()
+
+        boardTemp = restart()
+        boardTempBig = restart()
+
+        boardCombined = restart()
+
         zeroSpots = []
         numY = 5
         for i in range(9):
@@ -249,19 +294,17 @@ def game_ip_screen(level):
                 elif restart_button.collidepoint(mouse_x, mouse_y):
                     return "restart"
                 elif reset_button.collidepoint(mouse_x, mouse_y):
-                    boardTemp = restart(board)
-                    boardTempBig = restart(board)
+                    boardTemp = restart()
+                    boardTempBig = restart()
                     redrawBoard(board, boardTemp, boardTempBig)
                 for i in zeroSpots:
                     if (round(i[0]) >= mouse_x - (500 / 18)) and (round(i[0]) <= mouse_x + (500 / 18)) and (round(i[1]) + (500 / 18) >= mouse_y - (500 / 18)) and (round(i[1]) + (500 / 18) <= mouse_y + (500 / 18)):
-                        print(i[0], i[1], mouse_x, mouse_y)
                         activeBox = [i[2], i[3]]
             if event.type == pygame.KEYDOWN:
                 if activeBox != []:
                     if event.key == pygame.K_1:
                         boardTemp[activeBox[0]][activeBox[1]] = "1"
                         redrawBoard(board, boardTemp, boardTempBig)
-                        print("1")
                     elif event.key == pygame.K_2:
                         boardTemp[activeBox[0]][activeBox[1]] = "2"
                         redrawBoard(board, boardTemp, boardTempBig)
@@ -291,12 +334,20 @@ def game_ip_screen(level):
                         boardTempBig[activeBox[0]][activeBox[1]] = boardTemp[activeBox[0]][activeBox[1]]
                         boardTemp[activeBox[0]][activeBox[1]] = ""
                         redrawBoard(board, boardTemp, boardTempBig)
-                        check_game_status(boardTempBig)
+                        #check_game_status(boardTempBig)
+                        boardCombined = boardCombiner(board, boardTempBig)
+                        gameEnd = gameDone(boardCombined, boardFinished)
+                        if gameEnd == "lost":
+                            lostEnd = game_lost_screen()
+                            if lostEnd == True:
+                                return "restart"
+                        elif gameEnd == "win":
+                            game_won_screen()
 
             pygame.display.update()
 
 #Check if filled board is correct
-def is_valid_solution(board):
+"""def is_valid_solution(board):
     def check_group(group):
         return sorted(group) == list(range(1, 10))
 
@@ -318,17 +369,36 @@ def is_valid_solution(board):
             if not check_group(subgrid):
                 return False
 
-    return True
+    return True"""
 
 #Check if the board is full
-def check_game_status(board):
+"""def check_game_status(board):
     full_board = [[int(cell) if cell != "" else 0 for cell in row] for row in board]
 
     if all(all(row) for row in full_board):
+        print("full")
         if is_valid_solution(full_board):
             game_won_screen()
         else:
-            game_lost_screen()
+            game_lost_screen() """
+
+#attempt to see if finished board it equal to the board made
+def gameDone2(board):
+    for row in range(9):
+        for cell in range(9):
+            if board[row][cell] == 0:
+                return False
+    return True
+
+#attempt to see if finished board it equal to the board made
+def gameDone(board, boardFinished):
+    if gameDone2(board) == True:
+        for row in range(9):
+            for cell in range(9):
+                if int(board[row][cell]) != int(boardFinished[row][cell]):
+                    print(board[row][cell], boardFinished[row][cell])
+                    return "lost"
+        return "win"
 
 #main game load test
 if __name__ == '__main__':
