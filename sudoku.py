@@ -346,41 +346,6 @@ def game_ip_screen(level):
 
             pygame.display.update()
 
-#Check if filled board is correct
-"""def is_valid_solution(board):
-    def check_group(group):
-        return sorted(group) == list(range(1, 10))
-
-    for row in board:
-        if not check_group(row):
-            return False
-
-    for col in zip(*board):
-        if not check_group(col):
-            return False
-
-    for box_row in range(0, 9, 3):
-        for box_col in range(0, 9, 3):
-            subgrid = [
-                board[row][col]
-                for row in range(box_row, box_row + 3)
-                for col in range(box_col, box_col + 3)
-            ]
-            if not check_group(subgrid):
-                return False
-
-    return True"""
-
-#Check if the board is full
-"""def check_game_status(board):
-    full_board = [[int(cell) if cell != "" else 0 for cell in row] for row in board]
-
-    if all(all(row) for row in full_board):
-        print("full")
-        if is_valid_solution(full_board):
-            game_won_screen()
-        else:
-            game_lost_screen() """
 
 #attempt to see if finished board it equal to the board made
 def gameDone2(board):
